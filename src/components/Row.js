@@ -1,26 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Cell from "./Cell";
+import { range } from "../helpers";
 
 const Row = ({ current, showErrors, targets, ...rest }) => {
     return (
-        <div className="app-row row no-gutters">
-            <Cell className="app-row__cell" current={current} showErrors={showErrors} targets={targets} {...rest} />
-            <Cell className="app-row__cell" current={current} showErrors={showErrors} targets={targets} {...rest} />
-            <Cell className="app-row__cell" current={current} showErrors={showErrors} targets={targets} {...rest} />
-            <Cell className="app-row__cell" current={current} showErrors={showErrors} targets={targets} {...rest} />
+        <div className="row">
+            {range(1, 4).map(key => (
+                <Cell
+                    key={key.toString()}
+                    current={current}
+                    showErrors={showErrors}
+                    targets={targets}
+                    {...rest}
+                />
+            ))}
         </div>
     );
 };
 
-Row.defaultPropTypes = {
-    showErrors: false
+Row.defaultProps = {
+    current: null,
+    showErrors: false,
 };
 
 Row.propTypes = {
     current: PropTypes.object,
     showErrors: PropTypes.bool,
-    targets: PropTypes.array.isRequired
+    targets: PropTypes.array.isRequired,
 };
 
 export default Row;

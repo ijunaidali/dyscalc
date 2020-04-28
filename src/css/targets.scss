@@ -1,0 +1,62 @@
+@import "./colors.scss";
+
+#targets {
+    border: 2px solid #453411;
+    width: 100%;
+    @media (min-width: 576px) {
+        width: 150px;
+    }
+}
+
+.target.selected {
+    font-style: italic;
+    font-weight: bold;
+    padding: 3px;
+    border-width: 8px;
+    border-style: solid;
+}
+
+.target-0.selected {
+    border-color: $targetBorder0;
+}
+
+.target-1.selected {
+    border-color: $targetBorder1;
+}
+
+.target-2.selected {
+    border-color: $targetBorder2;
+}
+
+.target-3.selected {
+    border-color: $targetBorder3;
+}
+
+.target-4.selected {
+    border-color: $targetBorder4;
+}
+
+.target-0 {
+    color: $targetColor0;
+    background-color: $target0;
+}
+
+.target-1 {
+    color: $targetColor1;
+    background-color: $target1;
+}
+
+.target-2 {
+    color: $targetColor2;
+    background-color: $target2;
+}
+
+.target-3 {
+    color: $targetColor3;
+    background-color: $target3;
+}
+
+.target-4 {
+    color: $targetColor4;
+    background-color: $target4;
+}

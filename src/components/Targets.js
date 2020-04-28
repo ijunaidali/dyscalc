@@ -8,7 +8,9 @@ const Targets = ({ setCurrent, targets }) => {
     const handleTargetClick = idx => {
         const newValue = activeTarget === idx ? null : idx;
         setActiveTarget(newValue);
-        setCurrent({ idx, value: targets[idx] });
+        setCurrent(
+            newValue !== null ? { idx, value: targets[idx] } : { idx: null, value: null }
+        );
     };
 
     useEffect(() => {
@@ -21,6 +23,7 @@ const Targets = ({ setCurrent, targets }) => {
                 {targets.map((target, idx) => (
                     <TargetCell
                         idx={idx}
+                        // eslint-disable-next-line react/no-array-index-key
                         key={`target-${idx}`}
                         onClick={() => handleTargetClick(idx)}
                         selected={activeTarget === idx}
@@ -34,7 +37,7 @@ const Targets = ({ setCurrent, targets }) => {
 
 Targets.propTypes = {
     setCurrent: PropTypes.func.isRequired,
-    targets: PropTypes.array.isRequired
+    targets: PropTypes.array.isRequired,
 };
 
 export default Targets;

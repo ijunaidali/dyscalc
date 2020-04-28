@@ -1,53 +1,76 @@
-import React, { useState } from 'react';
-import OptionToggle from './OptionToggle';
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import OptionToggle from "./OptionToggle";
+import GameContext from "./GameContext";
+import { OPERATIONS, ACTION_TYPE } from "../enums";
 
 const OptionsContainer = ({ showOptions, backToGame }) => {
-	const options = {
-		upto: [10, 20],
-		targets: [3, 4, 5],
-		operation: ['sum', 'subtraction', 'both'],
-	};
+    const allOptions = {
+        upto: [10, 20],
+        target: [3, 4, 5],
+        operation: [OPERATIONS.SUM, OPERATIONS.SUBTRACT, OPERATIONS.BOTH],
+    };
 
-	const [selectedOptions, updateSelectedOptions] = useState({
-		upto: options.upto[0],
-		operation: options.operation[0],
-		targets: options.targets[0],
-	});
+    const { state, dispatch } = useContext(GameContext);
+    const { options } = state;
 
-	const handleClick = (option, value) => {
-		value = option === "operation" ? value : Number(value);
-		updateSelectedOptions({
-			...selectedOptions,
-			[option]: value,
-		});
-	};
+    const handleClick = (option, input) => {
+        const value = option === "operation" ? input : Number(input);
+        let actionType;
 
-	const toggle = Object.keys(options)
-		.map(optionKey => (
-			<OptionToggle
-				key={optionKey}
-				label={optionKey.toUpperCase()}
-				options={options[optionKey]}
-				currentChoice={selectedOptions[optionKey]}
-				handleClick={ event => handleClick(optionKey, event.target.innerHTML) }
-			/>
-		));
-    
-	return (
+        if (option === "operation") actionType = ACTION_TYPE.CHANGE_OPERATION;
+        else if (option === "target") actionType = ACTION_TYPE.CHANGE_TARGET;
+        else if (option === "upto") actionType = ACTION_TYPE.CHANGE_UPTO;
+
+        dispatch({
+            type: actionType,
+            payload: {
+                data: value,
+            },
+        });
+    };
+
+    const toggle = Object.keys(options).map(optionKey => (
+        <OptionToggle
+            key={optionKey}
+            label={optionKey.toUpperCase()}
+            options={allOptions[optionKey]}
+            currentChoice={options[optionKey]}
+            handleClick={event => handleClick(optionKey, event.target.innerHTML)}
+        />
+    ));
+
+    return (
         <>
-			{ showOptions && 
-				<>
-					<div className="backdrop" onClick={backToGame} />
-					
-					<div className="options-container">
-                        <h4>Select your Preferred Options</h4>
-                        { toggle }
-                        <button onClick={backToGame} id="back-to-game">Back to Game</button>
-					</div>
-                </>    
-            }
+            {showOptions && (
+                <>
+                    {/**
+                     * adding role="presentation" is only patch for js lint errors:
+                     * - jsx-a11y/click-events-have-key-events
+                     * - jsx-a11y/no-static-element-interactions
+                     * this really should have a keyDownHandler for ESC
+                     */}
+                    <div className="backdrop" onClick={backToGame} role="presentation" />
+                    <div className="options-container">
+                        <h3>Select your Preferred Options</h3>
+                        <div className="options-wrap">{toggle}</div>
+                        <button onClick={backToGame} id="back-to-game" type="button">
+                            Back to Game
+                        </button>
+                    </div>
+                </>
+            )}
         </>
-    )
+    );
+};
+
+OptionsContainer.defaultProps = {
+    showOptions: false,
+};
+
+OptionsContainer.propTypes = {
+    backToGame: PropTypes.func.isRequired,
+    showOptions: PropTypes.bool,
 };
 
 export default OptionsContainer;
